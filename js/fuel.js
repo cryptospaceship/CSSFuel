@@ -27,6 +27,7 @@ class GasTransaction {
             'signature': signature,
             'from': address
         };
+
         console.log(body);
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -37,6 +38,7 @@ class GasTransaction {
                     callback(xhr.response,null);
             }
         }
+
         xhr.open('POST', this.endpoint, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.send(JSON.stringify(body));
