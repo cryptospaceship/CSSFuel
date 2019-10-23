@@ -1,3 +1,16 @@
+class Dapp {
+    constructor(provider) {
+        this.abi = [{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_name","type":"string"},{"name":"_msg","type":"string"}],"name":"postMessage","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_delegated","type":"address"}],"name":"setDelegated","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_from","type":"address"},{"indexed":false,"name":"_number","type":"uint256"},{"indexed":false,"name":"_name","type":"string"},{"indexed":false,"name":"_msg","type":"string"}],"name":"PostMessage","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_delegated","type":"address"}],"name":"newDelegated","type":"event"}];
+        this.access = provider.eth.contract(this.abi);
+        this.contract = this.access.at("0xccad90a8c664899267214f235c4297ca5dcb664a");
+    }
+
+    postMessage(from,name,message) {
+        return this.contract.postMessage.getData(from,name,message);
+    }
+}
+
+
 class GasTransaction {
     constructor(backend, provider, bridge_address) {
         this.endpoint = backend;
@@ -49,7 +62,8 @@ class GasTransaction {
         this.nonce((e,r)=>{
             if (!e) {
                 let toSign = web3.sha3(data + this.pad(r.toNumber(),64), {encoding:'hex'});
-                web3.personal.sign(toSign, web3.eth.accounts[0],(error, signature)=>{
+                //web3.personal.sign(toSign, web3.eth.accounts[0],(error, signature)=>{
+                web3.eth.sign(web3.eth.accounts[0],toSign,(error, signature)=>{
                     console.log(signature);
                     console.log(error);
                     if (!error) {
